@@ -14,6 +14,7 @@ type OnePayload struct {
 	Included []*Node `json:"included,omitempty"`
 	Links    *Links  `json:"links,omitempty"`
 	Meta     *Meta   `json:"meta,omitempty"`
+	Filter   *Filter `json:"filter,omitempty"`
 }
 
 func (p *OnePayload) clearIncluded() {
@@ -118,4 +119,14 @@ type Metable interface {
 type RelationshipMetable interface {
 	// JSONRelationshipMeta will be invoked for each relationship with the corresponding relation name (e.g. `comments`)
 	JSONAPIRelationshipMeta(relation string) *Meta
+}
+
+// Filter is used to represent filtering conditions during resource
+// creation.
+type Filter map[string]interface{}
+
+// Filterable is used to include filters in response data
+// e.g. {"foo": "bar"}
+type Filterable interface {
+	JSONAPIFilter() *Filter
 }
