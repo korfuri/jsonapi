@@ -148,6 +148,10 @@ func marshalOne(model interface{}) (*OnePayload, error) {
 
 	payload.Included = nodeMapValues(&included)
 
+	if filterableModel, ok := model.(Filterable); ok {
+		payload.Filter = filterableModel.JSONAPIFilter()
+	}
+
 	return payload, nil
 }
 
@@ -194,6 +198,9 @@ func MarshalOnePayloadEmbedded(w io.Writer, model interface{}) error {
 	}
 
 	payload := &OnePayload{Data: rootNode}
+	if filterableModel, ok := model.(Filterable); ok {
+		payload.Filter = filterableModel.JSONAPIFilter()
+	}
 
 	if err := json.NewEncoder(w).Encode(payload); err != nil {
 		return err
